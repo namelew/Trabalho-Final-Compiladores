@@ -24,7 +24,7 @@ class FiniteAutomato:
 
             for j in range(len(vars)):
                 new = "<"+str(self.nStates)+">"
-                vars[j].replace(state, new)
+                vars[j] = re.sub(state, new, vars[j])
             
             self.nStates+=1
         
