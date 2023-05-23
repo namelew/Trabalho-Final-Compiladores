@@ -6,7 +6,12 @@ class FiniteAutomato:
         self.nStates = 0
         self.rules = []
         self.terminals = set()
-    def LoadRead(self):
+    def Build(self):
+        self.__loadRead()
+        self.__determinate()
+        self.__removeUnfinished()
+        self.__removeDead()
+    def __loadRead(self):
         file = open(self.sourcefile)
 
         vars = []
@@ -45,9 +50,9 @@ class FiniteAutomato:
                 else:
                     self.rules.append([word[j]+f"<{self.nStates}>"])
                     self.nStates += 1
-    def Determinate(self):
+    def __determinate(self):
         pass
-    def RemoveUnfinished(self):
+    def __removeUnfinished(self):
         pass
-    def RemoveDead(self):
+    def __removeDead(self):
         pass
