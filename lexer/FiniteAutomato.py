@@ -14,7 +14,6 @@ class FiniteAutomato:
     def Build(self):
         self.__loadRead()
         self.__determinate()
-        self.__removeUnfinished()
         self.__removeDead()
     def __loadRead(self):
         file = open(self.sourcefile)
@@ -85,27 +84,7 @@ class FiniteAutomato:
         reachbleRules = set()
 
         for ind in inds:
-            new_parent = list(filter(lambda x: False if re.match(f'{ind.simbol}<\d>',x) else True,self.rules[ind.parent]))
-            new_parent.append(f'{ind.simbol}<{self.nStates}>')
-            self.rules[ind.parent] = new_parent
- 
-            for production in new_parent:
-                matched = re.match(f'\w<(\d)>', production)
-                if matched:
-                    reachbleRules.add(int(matched.group(1)))
-
-            new_rule = []
-            for s in ind.states:
-                if s in self.terminals:
-                    self.terminals.add(self.nStates)
-                new_rule.extend(self.rules[s])
-            self.rules.append(new_rule)
-
-            for production in new_rule:
-                matched = re.match(f'\w<(\d)>', production)
-                if matched:
-                    reachbleRules.add(int(matched.group(1)))
-
+            self.rules.append(ind.Solve(self.rules, self.nStates, reachbleRules, self.terminals))
             reachbleRules.add(ind.parent)
             reachbleRules.add(self.nStates)
 
@@ -122,6 +101,6 @@ class FiniteAutomato:
             rstates = rstates.union(self.__solveindeterminations(inds))
             inds = self.__getindeterminations()
         
-        print(rstates)
+        print(rstates, self.rules)
     def __removeDead(self):
         pass
