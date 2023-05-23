@@ -37,7 +37,7 @@ class FiniteAutomato:
         for var in vars:
             productions = var.split('::=')[1]
             self.rules.append(productions.split('|'))
-            if re.search('^epsi$|^\w$', productions):
+            if re.search('epsi$|\w$|\w\|', productions):
                 self.terminals.add(len(self.rules) - 1)
 
         for word in words:
@@ -63,6 +63,13 @@ class FiniteAutomato:
     def __determinate(self):
         newRule = []
 
+        for rule in self.rules:
+            for char in self.alphabet:
+                matched = re.match(char+"<\d>", " ".join(rule))
+                if matched:
+                    ...
+                    #print(rule)
+                    #print(matched, matched.group(0))
     def __removeUnfinished(self):
         pass
     def __removeDead(self):
