@@ -101,6 +101,13 @@ class FiniteAutomato:
             rstates = rstates.union(self.__solveindeterminations(inds))
             inds = self.__getindeterminations()
         
-        print(rstates, self.rules)
+        for i in range(self.nStates):
+            if i in rstates:
+                for production in self.rules[i]:
+                    matched = re.match(f'\w<(\d)>', production)
+                    if matched:
+                        rstates.add(int(matched.group(1)))
+        
+        self.unreacheble = set([i for i in range(self.nStates)]).difference(rstates)
     def __removeDead(self):
         pass
