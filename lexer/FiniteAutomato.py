@@ -14,7 +14,6 @@ class FiniteAutomato:
     def Build(self):
         self.__loadRead()
         self.__determinate()
-        self.__removeDead()
     def __loadRead(self):
         file = open(self.sourcefile)
 
@@ -109,5 +108,3 @@ class FiniteAutomato:
                         rstates.add(int(matched.group(1)))
         
         self.unreacheble = set([i for i in range(self.nStates)]).difference(rstates)
-    def __removeDead(self):
-        pass
