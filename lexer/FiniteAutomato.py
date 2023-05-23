@@ -1,11 +1,14 @@
 import re
+import pandas as pd
 
 class FiniteAutomato:
     def __init__(self, sourcefile:str):
         self.sourcefile = sourcefile
         self.nStates = 0
         self.rules = []
+        self.states = pd.DataFrame()
         self.terminals = set()
+        self.alphabet = tuple()
     def Build(self):
         self.__loadRead()
         self.__determinate()
@@ -50,8 +53,17 @@ class FiniteAutomato:
                 else:
                     self.rules.append([word[j]+f"<{self.nStates}>"])
                     self.nStates += 1
+
+        characters = set()
+        for state in self.rules:
+            for transitions in state:
+                matched = re.match('^\w|^epsi', transitions)
+                if matched:
+                    characters.add(matched.group(0))
+        self.alphabet = tuple(sorted(list(characters)))
     def __determinate(self):
-        pass
+        newRule = []
+
     def __removeUnfinished(self):
         pass
     def __removeDead(self):
