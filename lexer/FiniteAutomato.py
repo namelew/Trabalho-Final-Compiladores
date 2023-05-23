@@ -13,9 +13,9 @@ class FiniteAutomato:
 
         for line in file.readlines():
             if re.search("^<\w>(.*)::=(.*)", line):
-                vars.append(line)
+                vars.append(line.replace('\n', '').replace(' ', ''))
             else:
-                tokens.append(line)
+                tokens.append(line.replace('\n', '').replace(' ', ''))
 
         file.close()
 
