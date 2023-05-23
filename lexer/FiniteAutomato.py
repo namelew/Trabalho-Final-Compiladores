@@ -1,4 +1,5 @@
 import re
+from Indetermination import Indetermination
 
 class FiniteAutomato:
     def __init__(self, sourcefile:str):
@@ -7,6 +8,8 @@ class FiniteAutomato:
         self.rules = []
         self.states = {}
         self.terminals = set()
+        self.unreacheble = set()
+        self.dead = set()
         self.alphabet = tuple()
     def Build(self):
         self.__loadRead()
@@ -60,17 +63,65 @@ class FiniteAutomato:
                 if matched:
                     characters.add(matched.group(0))
         self.alphabet = tuple(sorted(list(characters)))
+    def __getindeterminations(self) -> list:
+        inds = []
+
+        for i in range(len(self.rules)):
+            for char in self.alphabet:
+                ind = Indetermination()
+                temp = set()
+
+                for j in range(len(self.rules[i])):
+                    matched = re.match(f"{char}<(\d)>", self.rules[i][j])
+                    if matched:
+                        ind.parent = i
+                        ind.simbol = char
+                        temp.add(int(matched.group(1)))
+                ind.states.extend(temp)
+                if ind.isIndetermination():
+                    inds.append(ind)
+        return inds
+    def __solveindeterminations(self, inds:list[Indetermination]) -> set[int]:
+        reachbleRules = set()
+
+        for ind in inds:
+            new_parent = list(filter(lambda x: False if re.match(f'{ind.simbol}<\d>',x) else True,self.rules[ind.parent]))
+            new_parent.append(f'{ind.simbol}<{self.nStates}>')
+            self.rules[ind.parent] = new_parent
+ 
+            for production in new_parent:
+                matched = re.match(f'\w<(\d)>', production)
+                if matched:
+                    reachbleRules.add(int(matched.group(1)))
+
+            new_rule = []
+            for s in ind.states:
+                if s in self.terminals:
+                    self.terminals.add(self.nStates)
+                new_rule.extend(self.rules[s])
+            self.rules.append(new_rule)
+
+            for production in new_rule:
+                matched = re.match(f'\w<(\d)>', production)
+                if matched:
+                    reachbleRules.add(int(matched.group(1)))
+
+            reachbleRules.add(ind.parent)
+            reachbleRules.add(self.nStates)
+
+            self.nStates += 1
+        
+        return reachbleRules
     def __determinate(self):
         newRule = []
+        rstates = set()
 
-        for rule in self.rules:
-            for char in self.alphabet:
-                matched = re.match(char+"<\d>", " ".join(rule))
-                if matched:
-                    ...
-                    #print(rule)
-                    #print(matched, matched.group(0))
-    def __removeUnfinished(self):
-        pass
+        inds = self.__getindeterminations()
+
+        while len(inds) > 0:
+            rstates = rstates.union(self.__solveindeterminations(inds))
+            inds = self.__getindeterminations()
+        
+        print(rstates)
     def __removeDead(self):
         pass
