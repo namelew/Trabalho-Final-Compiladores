@@ -5,7 +5,7 @@ class FiniteAutomato:
         self.sourcefile = sourcefile
         self.nStates = 0
         self.rules = []
-        self.terminals = []
+        self.terminals = set()
     def LoadRead(self):
         file = open(self.sourcefile)
 
@@ -31,19 +31,20 @@ class FiniteAutomato:
             productions = var.split('::=')[1]
             self.rules.append(productions.split('|'))
             if re.search('^epsi$|^\w$', productions):
-                self.terminals.append(len(self.rules) - 1)
+                self.terminals.add(len(self.rules) - 1)
 
         for word in words:
             nchars = len(word)
             for j in range(nchars):
                 if j == 0:
                     self.rules[0].append(word[j]+f"<{self.nStates}>")
+                    self.nStates += 1
                 elif j == nchars - 1:
                     self.rules.append([word[j]])
-                    self.terminals.append(len(self.rules) - 1)
+                    self.terminals.add(self.nStates - 1)
                 else:
                     self.rules.append([word[j]+f"<{self.nStates}>"])
-                self.nStates += 1
+                    self.nStates += 1
     def Determinate(self):
         pass
     def RemoveUnfinished(self):
