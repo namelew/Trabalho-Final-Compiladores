@@ -1,12 +1,11 @@
 import re
-import pandas as pd
 
 class FiniteAutomato:
     def __init__(self, sourcefile:str):
         self.sourcefile = sourcefile
         self.nStates = 0
         self.rules = []
-        self.states = pd.DataFrame()
+        self.states = {}
         self.terminals = set()
         self.alphabet = tuple()
     def Build(self):
