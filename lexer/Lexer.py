@@ -1,5 +1,9 @@
 from FiniteAutomaton import DeterministicFiniteAutomaton
 
-automaton = DeterministicFiniteAutomaton("./input/rules.in")
-automaton.Build()
-print(automaton.states)
+class Lexer:
+    def __init__(self, tokenfile:str) -> None:
+        self.automaton = DeterministicFiniteAutomaton(tokenfile)
+        self.tape = []
+        self.automaton.Build()
+    def Recognize(self, source:list[str]) -> list:
+        pass
