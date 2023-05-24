@@ -1,4 +1,4 @@
-from FiniteAutomato import FiniteAutomato
+from FiniteAutomaton import DeterministicFiniteAutomaton
 
-af = FiniteAutomato("./input/rules.in")
-af.Build()
+automaton = DeterministicFiniteAutomaton("./input/rules.in")
+automaton.Build()

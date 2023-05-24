@@ -1,10 +1,10 @@
 import re
 from Indetermination import Indetermination
 
-class FiniteAutomato:
+class FiniteAutomaton:
     def __init__(self, sourcefile:str):
         self.sourcefile = sourcefile
-        self.nStates = 0
+        self.nRules = 0
         self.rules = []
         self.states = {}
         self.terminals = set()
@@ -12,9 +12,28 @@ class FiniteAutomato:
         self.dead = set()
         self.alphabet = tuple()
     def Build(self):
-        self.__loadRead()
-        self.__determinate()
-    def __loadRead(self):
+        self.loadRead()
+        self.createStates()
+        print(self.states)
+    def createStates(self):
+        for i in range(self.nRules):
+            if i in self.unreacheble or i in self.dead:
+                continue
+            self.states[f'<{i}>'] = {}
+            for char in self.alphabet:
+                for production in self.rules[i]:
+                    matched = re.match(f'{char}(<\d>)|^{char}$', production)
+                    if matched:
+                        if re.match(f'{char}<\d>', matched.group(0)):
+                            self.states[f'<{i}>'][char] = matched.group(1)
+                        elif re.match(f'^{char}$', matched.group(0)):
+                            self.states[f'<{i}>'][char] = ''
+                if char not in self.states[f'<{i}>']:
+                    self.states[f'<{i}>'][char] = '<ERROR>'
+        self.states['<ERROR>'] = {}
+        for char in self.alphabet:
+            self.states['<ERROR>'][char] = ''
+    def loadRead(self):
         file = open(self.sourcefile)
 
         vars = []
@@ -31,9 +50,9 @@ class FiniteAutomato:
         for i in range(len(vars)):
             state = vars[i].split('::=')[0]
             for j in range(len(vars)):
-                new = "<"+str(self.nStates)+">"
+                new = "<"+str(self.nRules)+">"
                 vars[j] = re.sub(state, new, vars[j])
-            self.nStates+=1
+            self.nRules+=1
         
         for var in vars:
             productions = var.split('::=')[1]
@@ -45,14 +64,14 @@ class FiniteAutomato:
             nchars = len(word)
             for j in range(nchars):
                 if j == 0:
-                    self.rules[0].append(word[j]+f"<{self.nStates}>")
-                    self.nStates += 1
+                    self.rules[0].append(word[j]+f"<{self.nRules}>")
+                    self.nRules += 1
                 elif j == nchars - 1:
                     self.rules.append([word[j]])
-                    self.terminals.add(self.nStates - 1)
+                    self.terminals.add(self.nRules - 1)
                 else:
-                    self.rules.append([word[j]+f"<{self.nStates}>"])
-                    self.nStates += 1
+                    self.rules.append([word[j]+f"<{self.nRules}>"])
+                    self.nRules += 1
 
         characters = set()
         for state in self.rules:
@@ -61,6 +80,14 @@ class FiniteAutomato:
                 if matched:
                     characters.add(matched.group(0))
         self.alphabet = tuple(sorted(list(characters)))
+
+class DeterministicFiniteAutomaton(FiniteAutomaton):
+    def __init__(self, sourcefile:str):
+        super.__init__(sourcefile)
+    def Build(self):
+        self.loadRead()
+        self.__determinate()
+        self.createStates()
     def __getindeterminations(self) -> list:
         inds = []
 
@@ -83,15 +110,14 @@ class FiniteAutomato:
         reachbleRules = set()
 
         for ind in inds:
-            self.rules.append(ind.Solve(self.rules, self.nStates, reachbleRules, self.terminals))
+            self.rules.append(ind.Solve(self.rules, self.nRules, reachbleRules, self.terminals))
             reachbleRules.add(ind.parent)
-            reachbleRules.add(self.nStates)
+            reachbleRules.add(self.nRules)
 
-            self.nStates += 1
+            self.nRules += 1
         
         return reachbleRules
     def __determinate(self):
-        newRule = []
         rstates = set()
 
         inds = self.__getindeterminations()
@@ -100,11 +126,11 @@ class FiniteAutomato:
             rstates = rstates.union(self.__solveindeterminations(inds))
             inds = self.__getindeterminations()
         
-        for i in range(self.nStates):
+        for i in range(self.nRules):
             if i in rstates:
                 for production in self.rules[i]:
                     matched = re.match(f'\w<(\d)>', production)
                     if matched:
                         rstates.add(int(matched.group(1)))
         
-        self.unreacheble = set([i for i in range(self.nStates)]).difference(rstates)
+        self.unreacheble = set([i for i in range(self.nRules)]).difference(rstates)
