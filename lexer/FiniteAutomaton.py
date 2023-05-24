@@ -13,7 +13,7 @@ class FiniteAutomaton:
         self.dead = set()
         self.alphabet = tuple()
     def Build(self):
-        self.loadRead()
+        self.loadFile()
         self.createStates()
     def createStates(self):
         newInitial = self.nRules - 1
@@ -44,7 +44,7 @@ class FiniteAutomaton:
         self.states['<ERROR>'] = {}
         for char in self.alphabet:
             self.states['<ERROR>'][char] = ''
-    def loadRead(self):
+    def loadFile(self):
         file = open(self.sourcefile)
 
         vars = []
@@ -102,7 +102,7 @@ class DeterministicFiniteAutomaton(FiniteAutomaton):
     def __init__(self, sourcefile:str):
         super().__init__(sourcefile)
     def Build(self):
-        self.loadRead()
+        self.loadFile()
         self.__determinate()
         self.createStates()
     def __getindeterminations(self) -> list:
