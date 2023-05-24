@@ -5,6 +5,7 @@ class FiniteAutomaton:
     def __init__(self, sourcefile:str):
         self.sourcefile = sourcefile
         self.nRules = 0
+        self.initialState = '<0>'
         self.rules = []
         self.states = {}
         self.terminals = set()
@@ -14,22 +15,26 @@ class FiniteAutomaton:
     def Build(self):
         self.loadRead()
         self.createStates()
-        print(self.states)
     def createStates(self):
+        print(self.rules)
+        newInitial = self.nRules - 1
         for i in range(self.nRules):
             if i in self.unreacheble or i in self.dead:
                 continue
+            if i < newInitial:
+                newInitial = i
             self.states[f'<{i}>'] = {}
             for char in self.alphabet:
                 for production in self.rules[i]:
-                    matched = re.match(f'{char}(<\d>)|^{char}$', production)
+                    matched = re.match(f'{char}(<\d+>)|^{char}$', production)
                     if matched:
-                        if re.match(f'{char}<\d>', matched.group(0)):
+                        if re.match(f'{char}<\d+>', matched.group(0)):
                             self.states[f'<{i}>'][char] = matched.group(1)
                         elif re.match(f'^{char}$', matched.group(0)):
                             self.states[f'<{i}>'][char] = ''
                 if char not in self.states[f'<{i}>']:
                     self.states[f'<{i}>'][char] = '<ERROR>'
+        self.initialState = f'<{newInitial}>'
         self.states['<ERROR>'] = {}
         for char in self.alphabet:
             self.states['<ERROR>'][char] = ''
@@ -80,10 +85,12 @@ class FiniteAutomaton:
                 if matched:
                     characters.add(matched.group(0))
         self.alphabet = tuple(sorted(list(characters)))
+    def nextState(self, currentState:str, simbol:str) -> str:
+        return self.states[currentState][simbol]
 
 class DeterministicFiniteAutomaton(FiniteAutomaton):
     def __init__(self, sourcefile:str):
-        super.__init__(sourcefile)
+        super().__init__(sourcefile)
     def Build(self):
         self.loadRead()
         self.__determinate()
@@ -97,7 +104,7 @@ class DeterministicFiniteAutomaton(FiniteAutomaton):
                 temp = set()
 
                 for j in range(len(self.rules[i])):
-                    matched = re.match(f"{char}<(\d)>", self.rules[i][j])
+                    matched = re.match(f"{char}<(\d+)>", self.rules[i][j])
                     if matched:
                         ind.parent = i
                         ind.simbol = char
@@ -110,7 +117,10 @@ class DeterministicFiniteAutomaton(FiniteAutomaton):
         reachbleRules = set()
 
         for ind in inds:
-            self.rules.append(ind.Solve(self.rules, self.nRules, reachbleRules, self.terminals))
+            new = ind.Solve(self.rules, self.nRules, reachbleRules, self.terminals)
+            if len(new) < 1:
+                break
+            self.rules.append(new)
             reachbleRules.add(ind.parent)
             reachbleRules.add(self.nRules)
 
@@ -123,13 +133,15 @@ class DeterministicFiniteAutomaton(FiniteAutomaton):
         inds = self.__getindeterminations()
 
         while len(inds) > 0:
-            rstates = rstates.union(self.__solveindeterminations(inds))
+            result = self.__solveindeterminations(inds)
+            if len(result) > 0:
+                rstates = rstates.union(result)
             inds = self.__getindeterminations()
         
         for i in range(self.nRules):
             if i in rstates:
                 for production in self.rules[i]:
-                    matched = re.match(f'\w<(\d)>', production)
+                    matched = re.match(f'\w<(\d+)>', production)
                     if matched:
                         rstates.add(int(matched.group(1)))
         
