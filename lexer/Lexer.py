@@ -1,4 +1,4 @@
-from FiniteAutomaton import DeterministicFiniteAutomaton
+from lexer.FiniteAutomaton import DeterministicFiniteAutomaton
 
 class Lexer:
     def __init__(self, tokenfile:str) -> None:

@@ -1,5 +1,5 @@
 import re
-from Indetermination import Indetermination
+from lexer.Indetermination import Indetermination
 
 class FiniteAutomaton:
     def __init__(self, sourcefile:str):
