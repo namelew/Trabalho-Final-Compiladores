@@ -108,6 +108,7 @@ class DeterministicFiniteAutomaton(FiniteAutomaton):
     def Build(self):
         self.loadFile()
         self.__determinate()
+        print(self.rules)
         self.createStates()
     def __getindeterminations(self) -> list:
         # lista de indeterminizações
@@ -134,12 +135,12 @@ class DeterministicFiniteAutomaton(FiniteAutomaton):
         reachbleRules = set()
 
         for ind in inds:
-            new = ind.Solve(self.rules, self.nRules-1, reachbleRules, self.terminals, self.keywords)
+            new = ind.Solve(self.rules, self.nRules, reachbleRules, self.terminals, self.keywords)
             if len(new) < 1:
                 break
             self.rules.append(new)
             reachbleRules.add(ind.parent)
-            reachbleRules.add(self.nRules-1)
+            reachbleRules.add(self.nRules)
 
             self.nRules += 1
         

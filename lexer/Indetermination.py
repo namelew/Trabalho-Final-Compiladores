@@ -20,7 +20,9 @@ class Indetermination:
                 terminals.add(nrules)
                 if s in keywords:
                     keywords.add(nrules)
-            unionParents.union(rules[s])
+            for production in rules[s]:
+                unionParents.add(production)
+        # agora não é só fazer ele não resolver de novo inderminizações já resolvidas
         new_rule.extend(unionParents)
         
         # atualizando lista de terminais
