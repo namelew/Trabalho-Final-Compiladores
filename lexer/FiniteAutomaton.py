@@ -130,26 +130,32 @@ class DeterministicFiniteAutomaton(FiniteAutomaton):
                 if ind.isIndetermination():
                     inds.append(ind)
         return inds
-    def __solveindeterminations(self, inds:list[Indetermination], solved:set[tuple[str]]) -> set[int]:
+    def __solveindeterminations(self, inds:list[Indetermination], solved:list[Indetermination]) -> set[int]:
         # conjunto de todos os estados alcançáveis pois interação
         reachbleRules = set()
 
         for ind in inds:
-            d_ind = (ind.simbol, "".join([f'<{s}>' for s in ind.states]))
-            if d_ind not in solved:
+            sind = next((x for x in solved if x.simbol == ind.simbol and (x.states == ind.states or x.states == ind.states[::-1])), None)
+            if sind == None:
+                print(f"Solving ({ind.simbol}, {ind.states}) in {ind.parent}")
                 new = ind.Solve(self.rules, self.nRules, reachbleRules, self.terminals, self.keywords)
-                solved.add(d_ind)
+                solved.append(ind)
                 if len(new) < 1:
                     break
                 self.rules.append(new)
                 reachbleRules.add(ind.parent)
                 reachbleRules.add(self.nRules)
                 self.nRules += 1
+            else:
+                print(f"({sind.simbol}, {sind.states}) is solved, using solution state in {ind.parent}")
+                new_parent = list(filter(lambda x: False if re.match(f'^{ind.simbol}<\d+>$',x) else True, self.rules[ind.parent]))
+                new_parent.append(f'{ind.simbol}{sind.state}')
+                self.rules[ind.parent] = new_parent
         
         return reachbleRules
     def __determinate(self):
         rstates = set()
-        solved = set()
+        solved = list()
         inds = self.__getindeterminations()
 
         while len(inds) > 0:

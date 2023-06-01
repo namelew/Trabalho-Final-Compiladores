@@ -1,9 +1,10 @@
 import re
 class Indetermination:
     def __init__(self) -> None:
-        self.parent = 0
-        self.simbol = ''
+        self.parent:int = 0
+        self.simbol:str = ''
         self.states = []
+        self.state:str = ''
     def isIndetermination(self) -> bool:
         return len(self.states) > 1
     def Solve(self, rules:list[list[str]], nrules:int, reachble:set[int], terminals:set[int], keywords:set[int]) -> list[str]:
@@ -24,6 +25,8 @@ class Indetermination:
                 unionParents.add(production)
         # agora não é só fazer ele não resolver de novo inderminizações já resolvidas
         new_rule.extend(unionParents)
+
+        self.state = f'<{nrules}>'
         
         # atualizando lista de terminais
         productions = list()
