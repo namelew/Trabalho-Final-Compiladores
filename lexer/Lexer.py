@@ -6,12 +6,14 @@ class Lexer:
         self.automaton.Build()
     def Recognize(self, source:list[str]) -> list[str]:
         tape:list[str] = []
+        print(source)
+        print(self.automaton.states)
         for token in source:
             currentState = self.automaton.initialState
-            for char in token:
-                if self.automaton.nextState(currentState, char) != '':
-                    currentState = self.automaton.nextState(currentState, char)
+            for i in range(len(token)):
+                if i == len(token) - 1:
+                    tape.append(self.automaton.states[currentState]['token'])
                 else:
-                    print(self.automaton[currentState]['token'])
-                    tape.append(self.automaton[currentState]['token'])
+                    if self.automaton.nextState(currentState, token[i]) != '':
+                        currentState = self.automaton.nextState(currentState, token[i])
         return tape
