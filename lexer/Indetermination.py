@@ -6,7 +6,7 @@ class Indetermination:
         self.states = []
     def isIndetermination(self) -> bool:
         return len(self.states) > 1
-    def Solve(self, rules:list[list[str]], nrules:int, reachble:set[int], terminals:set[int]) -> list[str]:
+    def Solve(self, rules:list[list[str]], nrules:int, reachble:set[int], terminals:set[int], keywords:set[int]) -> list[str]:
         # criando modificando regra onde ocorreu a interminização
         new_parent = list(filter(lambda x: False if re.match(f'^{self.simbol}<\d+>$',x) else True, rules[self.parent]))
         new_parent.append(f'{self.simbol}<{nrules}>')
@@ -18,6 +18,8 @@ class Indetermination:
         for s in self.states:
             if s in terminals:
                 terminals.add(nrules)
+                if s in keywords:
+                    keywords.add(nrules)
             unionParents.union(rules[s])
         new_rule.extend(unionParents)
         

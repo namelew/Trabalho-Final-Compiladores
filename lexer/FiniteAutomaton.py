@@ -8,6 +8,7 @@ class FiniteAutomaton:
         self.initialState = '<0>'
         self.rules = []
         self.states = {}
+        self.keywords = set()
         self.terminals = set()
         self.unreacheble = set()
         self.dead = set()
@@ -37,6 +38,7 @@ class FiniteAutomaton:
                             self.states[f'<{i}>'][char] = matched.group(1)
                         elif re.match(f'^{char}$', matched.group(0)):
                             self.states[f'<{i}>'][char] = ''
+                            self.states[f'<{i}>']["token"] = "<var>" if i not in self.keywords else f"<{i}>"
                 # adiciona transições para o estado de erro
                 if char not in self.states[f'<{i}>']:
                     self.states[f'<{i}>'][char] = '<ERROR>'
@@ -44,6 +46,7 @@ class FiniteAutomaton:
         self.states['<ERROR>'] = {}
         for char in self.alphabet:
             self.states['<ERROR>'][char] = ''
+            self.states['<ERROR>']["token"] = '<e>'
     def loadFile(self):
         file = open(self.sourcefile)
 
@@ -84,6 +87,7 @@ class FiniteAutomaton:
                 elif j == nchars - 1:
                     self.rules.append([word[j]])
                     self.terminals.add(self.nRules - 1)
+                    self.keywords.add(self.nRules - 1)
                 else:
                     self.rules.append([word[j]+f"<{self.nRules}>"])
                     self.nRules += 1
@@ -105,6 +109,7 @@ class DeterministicFiniteAutomaton(FiniteAutomaton):
         self.loadFile()
         self.__determinate()
         self.createStates()
+        print(self.states)
     def __getindeterminations(self) -> list:
         # lista de indeterminizações
         inds = []
@@ -130,7 +135,7 @@ class DeterministicFiniteAutomaton(FiniteAutomaton):
         reachbleRules = set()
 
         for ind in inds:
-            new = ind.Solve(self.rules, self.nRules, reachbleRules, self.terminals)
+            new = ind.Solve(self.rules, self.nRules, reachbleRules, self.terminals, self.keywords)
             if len(new) < 1:
                 break
             self.rules.append(new)
