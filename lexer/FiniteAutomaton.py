@@ -3,16 +3,16 @@ from lexer.Indetermination import Indetermination
 
 class FiniteAutomaton:
     def __init__(self, sourcefile:str):
-        self.sourcefile = sourcefile
-        self.nRules = 0
-        self.initialState = '<0>'
-        self.rules = []
-        self.states = {}
-        self.keywords = set()
-        self.terminals = set()
-        self.unreacheble = set()
-        self.dead = set()
-        self.alphabet = tuple()
+        self.sourcefile:str = sourcefile
+        self.nRules:int = 0
+        self.initialState:str = '<0>'
+        self.rules:list[list[str]] = []
+        self.states:dict = {}
+        self.keywords:set[int] = set()
+        self.terminals:set[int] = set()
+        self.unreacheble:set[int] = set()
+        self.dead:set[int] = set()
+        self.alphabet:tuple[str] = tuple()
     def Build(self):
         self.loadFile()
         self.createStates()
