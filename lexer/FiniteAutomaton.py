@@ -108,7 +108,6 @@ class DeterministicFiniteAutomaton(FiniteAutomaton):
     def Build(self):
         self.loadFile()
         self.__determinate()
-        print(self.rules)
         self.createStates()
     def __getindeterminations(self) -> list:
         # lista de indeterminizações
@@ -130,38 +129,37 @@ class DeterministicFiniteAutomaton(FiniteAutomaton):
                 if ind.isIndetermination():
                     inds.append(ind)
         return inds
-    def __solveindeterminations(self, inds:list[Indetermination], solved:list[Indetermination]) -> set[int]:
-        # conjunto de todos os estados alcançáveis pois interação
+    def __solveindeterminations(self, inds:list[Indetermination], newRules:list[list[str]]) -> set[int]:
         reachbleRules = set()
+        newStates = list()
 
         for ind in inds:
-            sind = next((x for x in solved if x.simbol == ind.simbol and (x.states == ind.states or x.states == ind.states[::-1])), None)
-            if sind == None:
-                print(f"Solving ({ind.simbol}, {ind.states}) in {ind.parent}")
-                new = ind.Solve(self.rules, self.nRules, reachbleRules, self.terminals, self.keywords)
-                solved.append(ind)
-                if len(new) < 1:
-                    break
-                self.rules.append(new)
-                reachbleRules.add(ind.parent)
-                reachbleRules.add(self.nRules)
-                self.nRules += 1
-            else:
-                print(f"({sind.simbol}, {sind.states}) is solved, using solution state in {ind.parent}")
-                new_parent = list(filter(lambda x: False if re.match(f'^{ind.simbol}<\d+>$',x) else True, self.rules[ind.parent]))
-                new_parent.append(f'{ind.simbol}{sind.state}')
-                self.rules[ind.parent] = new_parent
+            new = ind.Solve(self.rules, newRules, self.nRules, reachbleRules, self.terminals, self.keywords)
+            if len(new) < 1:
+                break
+            newRules.append(new)
+            reachbleRules.add(self.nRules)
+            newStates.append(self.nRules)
+            self.nRules += 1
         
+        for state in newStates:
+            for ind in inds:
+                prods = [f'{ind.simbol}<{si}>' for si in ind.states]
+                if all(pd in newRules[state] for pd in prods):
+                    newRules[state] = [elem for elem in newRules[state] if elem not in prods]
+                    newRules[state].append(ind.solution)
+
         return reachbleRules
     def __determinate(self):
         rstates = set()
-        solved = list()
         inds = self.__getindeterminations()
 
         while len(inds) > 0:
-            result = self.__solveindeterminations(inds,solved)
+            new = self.rules.copy()
+            result = self.__solveindeterminations(inds, new)
             if len(result) > 0:
                 rstates = rstates.union(result)
+            self.rules = new.copy()
             inds = self.__getindeterminations()
         
         # listando estados alcançáveis pelos alcançáveis conhecidos

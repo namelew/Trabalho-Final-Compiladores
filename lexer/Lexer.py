@@ -6,7 +6,6 @@ class Lexer:
         self.automaton.Build()
     def Recognize(self, source:list[str]) -> list[str]:
         tape:list[str] = []
-        print(source)
         for token in source:
             currentState = self.automaton.initialState
             for i in range(len(token)):

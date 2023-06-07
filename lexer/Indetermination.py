@@ -4,15 +4,14 @@ class Indetermination:
         self.parent:int = 0
         self.simbol:str = ''
         self.states = []
-        self.state:str = ''
+        self.solution = ''
     def isIndetermination(self) -> bool:
         return len(self.states) > 1
-    def Solve(self, rules:list[list[str]], nrules:int, reachble:set[int], terminals:set[int], keywords:set[int]) -> list[str]:
+    def Solve(self, rules:list[list[str]], newRules:list[list[str]],nrules:int, reachble:set[int], terminals:set[int], keywords:set[int]) -> list[str]:
         # criando modificando regra onde ocorreu a interminização
         new_parent = list(filter(lambda x: False if re.match(f'^{self.simbol}<\d+>$',x) else True, rules[self.parent]))
         new_parent.append(f'{self.simbol}<{nrules}>')
-        rules[self.parent] = new_parent
-
+        self.solution = f'{self.simbol}<{nrules}>'
         # criando nova regra
         new_rule = []
         unionParents = set()
@@ -26,11 +25,9 @@ class Indetermination:
         # agora não é só fazer ele não resolver de novo inderminizações já resolvidas
         new_rule.extend(unionParents)
 
-        self.state = f'<{nrules}>'
-        
+        newRules[self.parent] = new_parent
         # atualizando lista de terminais
         productions = list()
-        productions.extend(new_parent)
         productions.extend(new_rule)
         for production in productions:
             matched = re.match(f'^\w<(\d+)>$', production)
