@@ -1,4 +1,5 @@
 from lexer.Lexer import Lexer
 
 l = Lexer("./input/rules.in")
-print(l.Recognize(["se", "aac", "faca", "c","senao", "aa"]))
+tape, stable = l.Read("exemplo1.txt")
+print(tape, stable)

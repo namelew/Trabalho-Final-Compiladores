@@ -1,9 +1,12 @@
 se
 senao
+em
 entao
 enquanto
 para
 faca
+inicio
+fim
 <S> ::= a<A>|b<B>|b|c<S>|c|epsi 
 <A> ::= a<S>|a|b<C>|c<A>
 <B> ::= a<A>|c<B>|c<S>|c

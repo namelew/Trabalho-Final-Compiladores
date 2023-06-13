@@ -1,0 +1,11 @@
+para a em aaac faca
+inicio
+    se a entao
+        inicio
+            c
+        fim
+    senao
+        inicio 
+            cc
+        fim
+fim
