@@ -34,14 +34,13 @@ class FiniteAutomaton:
                     # utiliza expressão regular para mortar o par (simbolo, Estado)
                     matched = re.match(f'{char}(<\d+>)|^{char}$', production)
                     if matched:
-                        if re.match(f'{char}<\d+>', matched.group(0)):
-                            self.states[f'<{i}>'][char] = matched.group(1)
-                        elif re.match(f'^{char}$', matched.group(0)):
-                            self.states[f'<{i}>'][char] = ''
-                            self.states[f'<{i}>']["token"] = "var" if i not in self.keywords else f"{i}"
+                        if char not in self.states[f'<{i}>'] or self.states[f'<{i}>'][char] == '':
+                            self.states[f'<{i}>'][char] = matched.group(1) if re.match(f'{char}<\d+>', matched.group(0)) else ''
                 # adiciona transições para o estado de erro
                 if char not in self.states[f'<{i}>']:
                     self.states[f'<{i}>'][char] = '<ERROR>'
+            if i in self.terminals:
+                self.states[f'<{i}>']["token"] = "var" if i not in self.keywords else f"{i}"
         self.initialState = f'<{newInitial}>'
         self.states['<ERROR>'] = {}
         for char in self.alphabet:
