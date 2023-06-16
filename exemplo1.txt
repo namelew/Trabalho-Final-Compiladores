@@ -2,10 +2,10 @@ para a em aaac faca
 inicio
     se a entao
         inicio
-            c
+            c soma a
         fim
     senao
         inicio 
-            cc
+            cc soma a
         fim
 fim
