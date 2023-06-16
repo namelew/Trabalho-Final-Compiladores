@@ -38,7 +38,7 @@ class FiniteAutomaton:
                             self.states[f'<{i}>'][char] = matched.group(1)
                         elif re.match(f'^{char}$', matched.group(0)):
                             self.states[f'<{i}>'][char] = ''
-                            self.states[f'<{i}>']["token"] = "<var>" if i not in self.keywords else f"<{i}>"
+                            self.states[f'<{i}>']["token"] = "var" if i not in self.keywords else f"{i}"
                 # adiciona transições para o estado de erro
                 if char not in self.states[f'<{i}>']:
                     self.states[f'<{i}>'][char] = '<ERROR>'
@@ -46,7 +46,7 @@ class FiniteAutomaton:
         self.states['<ERROR>'] = {}
         for char in self.alphabet:
             self.states['<ERROR>'][char] = ''
-            self.states['<ERROR>']["token"] = '<e>'
+            self.states['<ERROR>']["token"] = 'error'
     def loadFile(self):
         file = open(self.sourcefile)
 
