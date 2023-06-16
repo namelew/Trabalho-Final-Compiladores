@@ -24,6 +24,8 @@ class Lexer:
             tape.extend(self.recognize(words, simbolTable, i + 1))
             i += 1
         
+        tape.append("$")
+        
         for reg in simbolTable.data:
             if reg['token'] == "error":
                 print(f"Error léxico na linha {reg['line']}: {reg['literal']}")
