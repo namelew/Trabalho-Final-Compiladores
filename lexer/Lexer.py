@@ -41,8 +41,9 @@ class Lexer:
             currentState = self.automaton.initialState
             for i in range(len(token)):
                 if i == len(token) - 1:
-                    simbolTableCell['token'] = self.automaton.states[currentState]['token']
-                    tape.append(self.automaton.states[currentState]['token'])
+                    stateID = self.automaton.states[currentState]['token'] if "token" in self.automaton.states[currentState] else "error" 
+                    simbolTableCell['token'] = stateID
+                    tape.append(stateID)
                 else:
                     if self.automaton.nextState(currentState, token[i]) != '':
                         currentState = self.automaton.nextState(currentState, token[i])
