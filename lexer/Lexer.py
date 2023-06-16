@@ -21,7 +21,7 @@ class Lexer:
             line = line.replace("\t", "")
             line = line.replace("\n", "")
             words = line.split(" ")
-            tape.extend(self.recognize(words, simbolTable, i))
+            tape.extend(self.recognize(words, simbolTable, i + 1))
             i += 1
         
         for reg in simbolTable.data:
@@ -39,13 +39,11 @@ class Lexer:
 
             simbolTableCell = {'literal':token, 'line': line}
             currentState = self.automaton.initialState
-            for i in range(len(token)):
-                if i == len(token) - 1:
-                    stateID = self.automaton.states[currentState]['token'] if "token" in self.automaton.states[currentState] else "error" 
-                    simbolTableCell['token'] = stateID
-                    tape.append(stateID)
-                else:
-                    if self.automaton.nextState(currentState, token[i]) != '':
-                        currentState = self.automaton.nextState(currentState, token[i])
+            for i in range(len(token) - 1 if  len(token) > 1 else 1):
+                if self.automaton.nextState(currentState, token[i]) != '':
+                    currentState = self.automaton.nextState(currentState, token[i])
+            stateID = self.automaton.states[currentState]['token'] if "token" in self.automaton.states[currentState] else "error" 
+            simbolTableCell['token'] = stateID
+            tape.append(stateID)
             simbolTable.add(simbolTableCell)
         return tape
