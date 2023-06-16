@@ -1,3 +1,5 @@
+from parser.PushownAutomaton import PushdownAutomaton
+
 class Parser:
-    def __init__(self) -> None:
-        pass
+    def __init__(self, automato:PushdownAutomaton) -> None:
+        self.automato:PushdownAutomaton = automato

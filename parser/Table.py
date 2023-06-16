@@ -10,6 +10,6 @@ class Table:
     def Action(self, row:str|int, collumn:str) -> str:
         pass
 
-class LR(Table):
-    def __init__(self) -> None:
-        pass
+class LRTable(Table):
+    def __init__(self, sourcefile:str) -> None:
+        self.tablefile:str = sourcefile
