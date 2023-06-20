@@ -1,5 +1,8 @@
-from parser.PushownAutomaton import PushdownAutomaton
+from parser.PushownAutomaton import LR,PushdownAutomaton
+from utils.SimbolTable import SimbolTable
+from parser.Table import LRTable
 
 class Parser:
-    def __init__(self, automato:PushdownAutomaton) -> None:
-        self.automato:PushdownAutomaton = automato
+    def __init__(self, tape:list[str], simbolTable:SimbolTable) -> None:
+        self.tablefile = "./input/parserTable.xml"
+        self.automato:PushdownAutomaton = LR(LRTable(self.tablefile), tape, simbolTable)

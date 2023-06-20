@@ -1,5 +1,6 @@
 from lexer.Lexer import Lexer
+from parser.Parser import Parser
 
-l = Lexer()
-tape, stable = l.Read("exemplo1.txt")
-print(tape, stable.data)
+tape,simbolTable = Lexer().Read("exemplo1.txt")
+
+p = Parser(tape, simbolTable)

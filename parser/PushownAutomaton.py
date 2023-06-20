@@ -23,7 +23,7 @@ class PushdownAutomaton:
 
 class LR(PushdownAutomaton):
     def __init__(self, table:LRTable, tape:list[str], simbolTable:SimbolTable) -> None:
-        super.__init__(table, tape, simbolTable)
+        super().__init__(table, tape, simbolTable)
     def Recognize(self) -> SimbolTable:
         pass
     def jump(self):
