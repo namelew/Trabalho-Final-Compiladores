@@ -1,13 +1,13 @@
-se
-senao
-em
-soma
-entao
-enquanto
-para
-faca
-inicio
-fim
+if
+else
+in
+add
+then
+while
+for
+do
+start
+end
 <S> ::= a<A>|b<B>|c<B>
 <A> ::= a<S>|a|b<C>|c<A>|epsi
 <B> ::= a<A>|c<B>|c<S>|c|epsi

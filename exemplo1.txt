@@ -1,11 +1,11 @@
-para a em aaac faca
-inicio
-    se a entao
-        inicio
-            c soma a
-        fim
-    senao
-        inicio 
-            cc soma a
-        fim
-fim
+for a in aaac do
+start
+    if a then
+        start
+            c add a
+        end
+    else
+        start 
+            cc add a
+        end
+end
