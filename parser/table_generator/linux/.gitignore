@@ -1,0 +1,16 @@
+results
+.DS_Store
+.clang-format
+.cache
+.idea
+.vscode
+release
+build
+wsl_build
+linux
+bin
+contains
+test
+*.y
+out
+**/__pycache__
