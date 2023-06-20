@@ -3,8 +3,8 @@ from utils.SimbolTable import SimbolTable
 from os import _exit
 
 class Lexer:
-    def __init__(self, tokenfile:str) -> None:
-        self.automaton:DeterministicFiniteAutomaton = DeterministicFiniteAutomaton(tokenfile)
+    def __init__(self) -> None:
+        self.automaton:DeterministicFiniteAutomaton = DeterministicFiniteAutomaton("./input/rules.in")
         self.automaton.Build()
     def Read(self, filename:str) -> tuple[list[str], SimbolTable]:
         tape:list[str] = []
