@@ -34,11 +34,11 @@ end
 <B> := add var <G>
 <G> := var | <B>
 <C> := true | false | var equal var | var diff var | not <C>
-<D> := if <C> then <E> <H> | <B>
+<D> := if <C> then <E> <H>
 <H> := else <E> | epsi
 <F> := for var in var do <E>
 ```
-* Aceita pelo [Context-Free Grammar Tool](https://smlweb.cpsc.ucalgary.ca/start.html) da Universidade Calgaria em Alberta-Canadá
+* Aceita pelo [Context-Free Grammar Tool](https://smlweb.cpsc.ucalgary.ca/start.html) da Universidade Calgaria em Alberta - Canadá
 ```
 E -> start A end.
 A -> B
@@ -53,8 +53,7 @@ C -> true
    | var equal var
    | var diff var
    | not C.
-D -> if C then E H
-   | B.
+D -> if C then E H.
 H -> else E
    | ε.
 F -> for var in var do E.
