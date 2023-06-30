@@ -1,6 +1,6 @@
 for a in aaac do
 start
-    if a then
+    if add a a equal aa then
         start
             c add a
         end

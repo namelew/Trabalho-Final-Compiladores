@@ -3,9 +3,13 @@ else
 in
 add
 then
-while
 for
 do
+true
+false
+equal
+diff
+not
 start
 end
 <S> ::= a<A>|b<B>|c<B>
