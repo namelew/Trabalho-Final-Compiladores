@@ -10,7 +10,7 @@ class Table:
     def Build(self):
         pass
     @abstractclassmethod
-    def Action(self, row:str|int, collumn:str) -> str:
+    def Action(self, state:str|int, token:str) -> str|int:
         pass
 
 class LRTable(Table):
