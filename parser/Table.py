@@ -5,7 +5,7 @@ class Table:
     def __init__(self) -> None:
         self.simbols:dict[list[str,int]] =  dict()
         self.productions:dict[list[int,int]] =  dict()
-        pass
+        self.states:dict[dict[list[int,int]]] = dict()
     @abstractclassmethod
     def Build(self):
         pass
@@ -15,6 +15,7 @@ class Table:
 
 class LRTable(Table):
     def __init__(self, sourcefile:str) -> None:
+        super().__init__()
         self.tablefile:str = sourcefile
     def Build(self):
         tree = ET.parse(self.tablefile)
@@ -24,5 +25,7 @@ class LRTable(Table):
         for node in tree.findall('.//m_Production/Production'):
             self.productions[int(node.attrib['Index'])] = [int(node.attrib['NonTerminalIndex']), int(node.attrib['SymbolCount'])]
         
-        print(self.simbols)
-        print(self.productions)
+        for node in tree.findall('.//LALRTable/LALRState'):
+            self.states[int(node.attrib['Index'])] = {}
+            for child in node:
+                self.states[int(node.attrib['Index'])][int(child.attrib['SymbolIndex'])] = [int(child.attrib['Action']), int(child.attrib['Value'])]
