@@ -10,7 +10,7 @@ class Table:
     def Build(self):
         pass
     @abstractclassmethod
-    def Action(self, state:str|int, token:str) -> str|int:
+    def Action(self, state:str|int, token:str|int) -> str|int|list:
         pass
 
 class LRTable(Table):
@@ -29,5 +29,5 @@ class LRTable(Table):
             self.states[int(node.attrib['Index'])] = {}
             for child in node:
                 self.states[int(node.attrib['Index'])][int(child.attrib['SymbolIndex'])] = [int(child.attrib['Action']), int(child.attrib['Value'])]
-    def Action(self, state:str|int, token:str) -> str|int:
+    def Action(self, state:int, token:int) -> list[int]:
         return self.states[state][token]
