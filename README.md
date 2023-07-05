@@ -58,3 +58,13 @@ H -> else E
    | ε.
 F -> for var in var do E.
 ```
+* Aceita pelo [Gold Parser](http://goldparser.org/download.htm)
+```
+"Start Symbol" = <E>
+
+<B> ::= add var var | add var <B>
+<C> ::= true | false | var equal var | var diff var | not <C>
+<F> ::= for var in var do start <B> end | for var in var do start <C> end | for var in var do start <F> end | for var in var do start <D> end
+<D> ::= if <C> then <E> else <E> | if <C> then <E>
+<E> ::= start <B> end | start <C> end | start <D> end | start <F> end
+```
