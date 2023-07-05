@@ -10,7 +10,7 @@ class Table:
     def Build(self):
         pass
     @abstractclassmethod
-    def Action(self, state:str|int, token:str|int) -> str|int|list:
+    def Action(self, state:str|int, token:str|int) -> str|int|list[str|int]:
         pass
 
 class LRTable(Table):
@@ -20,7 +20,7 @@ class LRTable(Table):
     def Build(self):
         tree = ET.parse(self.tablefile)
         for node in tree.findall('.//m_Symbol/Symbol'):
-            self.simbols[int(node.attrib['Index'])] = [node.attrib['Name'], int(node.attrib['Type'])]
+            self.simbols[node.attrib['Name']] = [int(node.attrib['Index']), int(node.attrib['Type'])]
 
         for node in tree.findall('.//m_Production/Production'):
             self.productions[int(node.attrib['Index'])] = [int(node.attrib['NonTerminalIndex']), int(node.attrib['SymbolCount'])]
@@ -29,5 +29,5 @@ class LRTable(Table):
             self.states[int(node.attrib['Index'])] = {}
             for child in node:
                 self.states[int(node.attrib['Index'])][int(child.attrib['SymbolIndex'])] = [int(child.attrib['Action']), int(child.attrib['Value'])]
-    def Action(self, state:int, token:int) -> list[int]:
-        return self.states[state][token]
+    def Action(self, state:int, token:str) -> list[int]:
+        return self.states[state][self.simbols[token][0]]

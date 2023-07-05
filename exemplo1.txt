@@ -1,3 +1,4 @@
+start
 for a in aaac do
 start
     if add a a equal aa then
@@ -8,4 +9,5 @@ start
         start 
             cc add a
         end
+end
 end
