@@ -15,19 +15,42 @@ class Parser:
         self.table.Build()
     def Analyse(self, tape:list[str], simbolTable:SimbolTable) -> SimbolTable:
         self.stack.append(self.initialState)
+        tape[-1] = 'EOF'
+        tape.reverse()
+        tokenid, lastTokenid, tokenPosition = -1, 0, 0
 
-        for id,token in enumerate(tape):
-            try:
-                action = self.table.Action(self.stack[-1], token)
-            
-                if action[0] == SHIFT:
-                    pass
-                if action[0] == REDUCE:
-                    pass
-                if action[0] == GOTO:
-                    pass
-                if action[0] == ACCEPT:
-                    pass
-            except:
-                print(f"Sintax error on line {simbolTable.data[id]['line']}: '{' '.join([simbolTable.data[j]['literal'] for j in range(0, id+1)])}'")
-                _exit(0)
+        print(f"Stack: {self.stack}, Tape: {' '.join(tape)}")
+
+        while tokenid != 0:
+            token = tape.pop()
+            next = False
+            tokenid = self.table.simbols[token][0]
+            while not next:
+                try:
+                    action = self.table.Action(self.stack[-1], token)
+
+                    if action[0] == SHIFT:
+                        print(f"SHIFT {tokenid}, {action[1]}", end=". ")
+                        self.stack.extend([tokenid, action[1]])
+                        next = True
+                        print(f"Stack: {self.stack}, Tape: {' '.join(tape)}")
+                    if action[0] == REDUCE:
+                        print(f"REDUCE {tokenid} for production {action[1]}", end=". ")
+                        #self.stack.append(tokenid)
+                        production = self.table.productions[action[1]]
+                        for _ in range(production[1] * 2):
+                            self.stack.pop()
+                        lastTokenid = tokenid
+                        tokenid = production[0]
+                        print(f"Stack: {self.stack}, Tape: {' '.join(tape)}")
+                    if action[0] == GOTO:
+                        print(f"GOTO {tokenid} {action[1]}", end=". ")
+                        self.stack.extend([tokenid, action[1]])
+                        tokenid = lastTokenid
+                        print(f"Stack: {self.stack}, Tape: {' '.join(tape)}")
+                    if action[0] == ACCEPT:
+                        return simbolTable
+                except KeyError:
+                    print(f"Sintax error on line {simbolTable.data[tokenPosition]['line']}: '{' '.join([simbolTable.data[j]['literal'] for j in range(0, tokenPosition+1)])}'")
+                    _exit(0)
+            tokenPosition += 1
