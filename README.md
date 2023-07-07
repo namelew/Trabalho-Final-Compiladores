@@ -5,7 +5,6 @@ Trabalho final da disciplina de compiladores
 %reserved words
 if
 else
-in
 add
 then
 for
@@ -36,7 +35,6 @@ end
 <C> := true | false | var equal var | var diff var | not <C>
 <D> := if <C> then <E> <H>
 <H> := else <E> | epsi
-<F> := for var in var do <E>
 ```
 * Aceita pelo [Context-Free Grammar Tool](https://smlweb.cpsc.ucalgary.ca/start.html) da Universidade Calgaria em Alberta - Canadá
 ```
@@ -56,15 +54,13 @@ C -> true
 D -> if C then E H.
 H -> else E
    | ε.
-F -> for var in var do E.
 ```
 * Aceita pelo [Gold Parser](http://goldparser.org/download.htm)
 ```
 "Start Symbol" = <E>
 
-<B> ::= add var var | add var <B> | var
+<B> ::= add var var | add var <B>
 <C> ::= true | false | var equal var | var diff var | not <C>
-<F> ::= for var in var do start <E> end
 <G> ::= else <E> | 
 <D> ::= if <C> then <E> <G>
 <E> ::= start <B> end | start <C> end | start <D> end | start <F> end
