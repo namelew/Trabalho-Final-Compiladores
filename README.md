@@ -29,7 +29,7 @@ end
 ```
 <E'> := <E>
 <E> := start <A> end
-<A> := <B>|<C>|<D>|<F>
+<A> := <B>|<C>|<D>
 <B> := add var <G>
 <G> := var | <B>
 <C> := true | false | var equal var | var diff var | not <C>
@@ -42,7 +42,6 @@ E -> start A end.
 A -> B
    | C
    | D
-   | F.
 B -> add var G.
 G -> var
    | B.
@@ -63,5 +62,5 @@ H -> else E
 <C> ::= true | false | var equal var | var diff var | not <C>
 <G> ::= else <E> | 
 <D> ::= if <C> then <E> <G>
-<E> ::= start <B> end | start <C> end | start <D> end | start <F> end
+<E> ::= start <B> end | start <C> end | start <D> end
 ```
