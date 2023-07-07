@@ -35,20 +35,19 @@ class Parser:
                         next = True
                         print(f"Stack: {self.stack}, Tape: {' '.join(tape)}")
                     if action[0] == REDUCE:
-                        print(f"REDUCE {tokenid} for production {action[1]}", end=". ")
-                        #self.stack.append(tokenid)
+                        print(f"REDUCE {tokenid} for production {action[1]}.")
                         production = self.table.productions[action[1]]
                         for _ in range(production[1] * 2):
                             self.stack.pop()
                         lastTokenid = tokenid
                         tokenid = production[0]
-                        print(f"Stack: {self.stack}, Tape: {' '.join(tape)}")
                     if action[0] == GOTO:
                         print(f"GOTO {tokenid} {action[1]}", end=". ")
                         self.stack.extend([tokenid, action[1]])
                         tokenid = lastTokenid
                         print(f"Stack: {self.stack}, Tape: {' '.join(tape)}")
                     if action[0] == ACCEPT:
+                        print("ACCEPT")
                         return simbolTable
                 except KeyError:
                     print(f"Sintax error on line {simbolTable.data[tokenPosition]['line']}: '{' '.join([simbolTable.data[j]['literal'] for j in range(0, tokenPosition+1)])}'")
