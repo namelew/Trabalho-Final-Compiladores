@@ -62,9 +62,10 @@ F -> for var in var do E.
 ```
 "Start Symbol" = <E>
 
-<B> ::= add var var | add var <B>
+<B> ::= add var var | add var <B> | var
 <C> ::= true | false | var equal var | var diff var | not <C>
-<F> ::= for var in var do start <B> end | for var in var do start <C> end | for var in var do start <F> end | for var in var do start <D> end
-<D> ::= if <C> then <E> else <E> | if <C> then <E>
+<F> ::= for var in var do start <E> end
+<G> ::= else <E> | 
+<D> ::= if <C> then <E> <G>
 <E> ::= start <B> end | start <C> end | start <D> end | start <F> end
 ```
