@@ -29,5 +29,5 @@ class LRTable(Table):
             self.states[int(node.attrib['Index'])] = {}
             for child in node:
                 self.states[int(node.attrib['Index'])][int(child.attrib['SymbolIndex'])] = [int(child.attrib['Action']), int(child.attrib['Value'])]
-    def Action(self, state:int, token:str) -> list[int]:
-        return self.states[state][self.simbols[token][0]]
+    def Action(self, state:int, token:int) -> list[int]:
+        return self.states[state][token]

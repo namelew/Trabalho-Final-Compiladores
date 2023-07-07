@@ -27,7 +27,7 @@ class Parser:
             tokenid = self.table.simbols[token][0]
             while not next:
                 try:
-                    action = self.table.Action(self.stack[-1], token)
+                    action = self.table.Action(self.stack[-1], tokenid)
 
                     if action[0] == SHIFT:
                         print(f"SHIFT {tokenid}, {action[1]}", end=". ")
