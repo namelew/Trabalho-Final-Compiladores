@@ -13,6 +13,19 @@ class Parser:
         self.stack:list[str|int] = []
         self.table:Table = LRTable(TABLESOURCE)
         self.table.Build()
+    def __print_stack(self, simbolTable:SimbolTable, tokenPosition:int):
+        for token in self.stack:
+            for key,simbol in self.table.simbols.items():
+                if simbol[0] == token:
+                    # if key not in ["EOF", "Error", "var"]:
+                    #     try:
+                    #         print([reg['literal'] for reg in simbolTable.data if reg['token'] == key][0], end=" ")
+                    #     except:
+                    #         print("", end=" ")
+                    # else:
+                    #     print(key, end=" ")
+                    print(key, end=" ")
+                    break
     def Analyse(self, tape:list[str], simbolTable:SimbolTable) -> SimbolTable:
         self.stack.append(self.initialState)
         tape[-1] = 'EOF'
@@ -33,7 +46,9 @@ class Parser:
                         print(f"SHIFT {tokenid}, {action[1]}", end=". ")
                         self.stack.extend([tokenid, action[1]])
                         next = True
-                        print(f"Stack: {self.stack}, Tape: {' '.join(tape)}")
+                        print(f"Stack: ", end='')
+                        self.__print_stack(simbolTable.data, tokenPosition)
+                        print(f", Tape: {' '.join(tape)}")
                     if action[0] == REDUCE:
                         print(f"REDUCE {tokenid} for production {action[1]}.")
                         production = self.table.productions[action[1]]
@@ -45,7 +60,9 @@ class Parser:
                         print(f"GOTO {tokenid} {action[1]}", end=". ")
                         self.stack.extend([tokenid, action[1]])
                         tokenid = lastTokenid
-                        print(f"Stack: {self.stack}, Tape: {' '.join(tape)}")
+                        print(f"Stack: ", end='')
+                        self.__print_stack(simbolTable, tokenPosition)
+                        print(f", Tape: {' '.join(tape)}")
                     if action[0] == ACCEPT:
                         print("ACCEPT")
                         return simbolTable
