@@ -38,14 +38,17 @@ class Lexer:
         for token in source:
             if token == '':
                 continue
-
             simbolTableCell = {'literal':token, 'line': line}
-            currentState = self.automaton.initialState
-            for i in range(len(token) - 1 if  len(token) > 1 else 1):
-                if self.automaton.nextState(currentState, token[i]) != '':
-                    currentState = self.automaton.nextState(currentState, token[i])
-            stateID = self.automaton.states[currentState]['token'] if "token" in self.automaton.states[currentState] else "error" 
-            simbolTableCell['token'] = stateID
-            tape.append(stateID)
+            try:
+                currentState = self.automaton.initialState
+                for i in range(len(token) - 1 if  len(token) > 1 else 1):
+                    if self.automaton.nextState(currentState, token[i]) != '':
+                        currentState = self.automaton.nextState(currentState, token[i])
+                stateID = self.automaton.states[currentState]['token'] if "token" in self.automaton.states[currentState] else "error" 
+                simbolTableCell['token'] = stateID
+                tape.append(stateID)
+            except:
+                simbolTableCell['token'] = "error"
+                tape.append("error")
             simbolTable.add(simbolTableCell)
         return tape
