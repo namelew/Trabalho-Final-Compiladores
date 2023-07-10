@@ -67,6 +67,9 @@ class Parser:
                         print("ACCEPT")
                         return simbolTable
                 except KeyError:
-                    print(f"Sintax error on line {simbolTable.data[tokenPosition]['line']}: '{' '.join([simbolTable.data[j]['literal'] for j in range(0, tokenPosition+1)])}'")
+                    if tokenPosition < len(simbolTable.data):
+                        print(f"Sintax error on line {simbolTable.data[tokenPosition]['line']}: '{' '.join([simbolTable.data[j]['literal'] for j in range(0, tokenPosition+1)])}'")
+                    else:
+                        print(f"Sintax error on line {simbolTable.data[-1]['line']}: '{' '.join([simbolTable.data[j]['literal'] for j in range(0, len(simbolTable.data))])}'")
                     _exit(0)
             tokenPosition += 1
